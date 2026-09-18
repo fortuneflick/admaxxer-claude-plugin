@@ -42,11 +42,36 @@ curl -si -X POST https://admaxxer.com/mcp \
 curl -s https://admaxxer.com/.well-known/oauth-protected-resource
 ```
 
-**Not verified:** a full end-to-end OAuth authorization-code flow (dynamic
-client registration, consent screen, token exchange). Discovery resolves; the
-day-to-day path customers use today is the bearer token minted at
-https://admaxxer.com/integrations/mcp. Walk the whole flow in a client before
-telling a reviewer that OAuth sign-in is the supported path.
+**There is no OAuth authorization-code flow.** Discovery *resolves*, which is
+not the same thing, and the difference is what a directory reviewer tests.
+Re-checked 2026-09-18:
+
+| What a reviewer does | What happens |
+|---|---|
+| `GET /.well-known/oauth-authorization-server` | 200, but `response_types_supported`, `grant_types_supported` and `code_challenge_methods_supported` are all `[]` |
+| Follows `authorization_endpoint` | lands on `/integrations/mcp`, the dashboard page, behind a session login — not an OAuth `/authorize` |
+| `POST` to a dynamic-registration endpoint | there is none; `/register` returns the SPA shell with a 200 |
+| `GET /authorize`, `/oauth/authorize`, `/.well-known/openid-configuration` | all 200 **with the SPA shell**, because unknown paths render the app (GL#606) — they look alive to a checker and are not endpoints |
+
+So an automated reviewer following RFC 9728 → RFC 8414 gets a metadata
+document that advertises an authorization server, then finds nothing behind
+it, and every wrong turn answers 200 instead of 404. **This is the most
+likely reason the claude.ai connectors directory turned the server down:**
+that directory's connect button drives DCR → `/authorize` → token exchange,
+and none of those three exist.
+
+Two honest ways forward, both owner decisions:
+
+1. **Build the flow** — dynamic client registration, `/authorize` with a
+   consent screen, PKCE, `/token`. This is what the claude.ai directory and
+   ChatGPT apps both want, and it is the only path to a one-click connector.
+2. **Stop advertising one** — drop `/.well-known/oauth-authorization-server`
+   and the `authorization_servers` pointer, and submit as a bearer-token
+   server where the catalog allows it (xAI, Anthropic plugins, Cursor all do).
+
+Until one of them is done, do not tell a reviewer OAuth sign-in is supported.
+The path that genuinely works today is the token minted at
+https://admaxxer.com/integrations/mcp.
 
 ## 1. xAI plugin marketplace (Grok Build)
 
