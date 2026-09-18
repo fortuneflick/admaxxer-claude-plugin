@@ -20,7 +20,7 @@ push. Manifests, README and this file are hand-maintained.
 
 - [x] Public repository created: https://github.com/fortuneflick/admaxxer-claude-plugin (MIT).
 - [x] `claude plugin validate .` passes locally.
-- [ ] Record the 40-char SHA after each push: `git ls-remote https://github.com/fortuneflick/admaxxer-claude-plugin.git HEAD`
+- [x] `main` pushed. SHA at the xAI pin: `684cd2d59ab0f675959bce3379d7ee98717668ab`. Re-record after each push: `git ls-remote https://github.com/fortuneflick/admaxxer-claude-plugin.git HEAD`
 
 ## Live check — MCP OAuth (2026-09-18)
 
@@ -63,6 +63,12 @@ telling a reviewer that OAuth sign-in is the supported path.
    xAI rejects generic terms such as `analytics` or `ads`.
 5. After any change to this repository, open a follow-up PR bumping `sha`.
    **Never a parallel entry.**
+
+**Status 2026-09-18:** PR open — https://github.com/xai-org/plugin-marketplace/pull/786,
+from fork `fortuneflick/plugin-marketplace`, branch `add-admaxxer`, pinned to
+`684cd2d59ab0f675959bce3379d7ee98717668ab`. All three of their scripts passed
+locally. Expect the "official org vs personal account" question; the answer is
+to move this repository to an `admaxxer` org and re-pin.
 
 ## 2. Anthropic plugin directory (Claude Code / Cowork)
 
