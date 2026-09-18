@@ -1,0 +1,40 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.admaxxer/mcp-server",
+  "title": "Admaxxer",
+  "description": "Read your ad accounts, revenue attribution and web analytics across Meta, Google, TikTok and Klaviyo, then pause a campaign or change a daily budget with a preview you approve in the conversation. 17 tools, read-only by default, and anything an agent creates lands paused.",
+  "version": "0.1.0",
+  "websiteUrl": "https://admaxxer.com/documentation/connect-any-ai",
+  "repository": {
+    "url": "https://github.com/fortuneflick/admaxxer-claude-plugin",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://admaxxer.com/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer <your workspace token>, minted at https://admaxxer.com/integrations/mcp. Read-only unless you pick the Read + manage scope.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    },
+    {
+      "type": "sse",
+      "url": "https://admaxxer.com/mcp/sse",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "The same token, for clients that only speak the older HTTP+SSE transport.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

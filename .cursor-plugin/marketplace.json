@@ -1,0 +1,19 @@
+{
+  "name": "admaxxer",
+  "owner": {
+    "name": "Admaxxer",
+    "email": "hello@admaxxer.com",
+    "url": "https://admaxxer.com"
+  },
+  "metadata": {
+    "description": "Read your ad accounts, revenue attribution and web analytics across Meta, Google, TikTok and Klaviyo, then pause a campaign or change a daily budget with a preview you approve in the conversation. 17 tools, read-only by default, and anything an agent creates lands paused.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "admaxxer",
+      "description": "Read your ad accounts, revenue attribution and web analytics across Meta, Google, TikTok and Klaviyo, then pause a campaign or change a daily budget with a preview you approve in the conversation. 17 tools, read-only by default, and anything an agent creates lands paused.",
+      "source": "./"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="600" height="200" role="img" aria-label="Admaxxer">
+  <title>Admaxxer</title>
+  <defs>
+    <linearGradient id="canvasShade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a14"/>
+      <stop offset="100%" stop-color="#0d0d1c"/>
+    </linearGradient>
+    <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7c3aed">
+        <animate attributeName="stop-color" values="#7c3aed;#8b5cf6;#7c3aed" dur="8s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#10b981">
+        <animate attributeName="stop-color" values="#10b981;#34d399;#10b981" dur="8s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <radialGradient id="iconTopGlow" cx="0.25" cy="0.15" r="0.95">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="iconCornerTint" cx="0.95" cy="0.95" r="0.9">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.4"/>
+      <stop offset="60%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="headGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nodeGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wordmark" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="50%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <path id="curve" d="M 15 110 C 28 100 38 120 54 105 C 68 92 74 115 84 90 C 94 68 104 72 114 48 C 124 24 132 30 132 30"/>
+  </defs>
+
+  <rect width="600" height="200" fill="url(#canvasShade)"/>
+
+  <g transform="translate(30, 30)">
+    <rect width="140" height="140" rx="28" fill="url(#iconBg)"/>
+    <rect width="140" height="140" rx="28" fill="url(#iconCornerTint)"/>
+    <rect width="140" height="140" rx="28" fill="url(#iconTopGlow)"/>
+
+    <g stroke="#ffffff" stroke-linecap="round">
+      <line x1="18" y1="108" x2="128" y2="108" stroke-opacity="0.14" stroke-width="1.2" stroke-dasharray="3 5"/>
+      <line x1="18" y1="78" x2="128" y2="78" stroke-opacity="0.12" stroke-width="1.2" stroke-dasharray="3 5"/>
+      <line x1="18" y1="48" x2="128" y2="48" stroke-opacity="0.1" stroke-width="1.2" stroke-dasharray="3 5"/>
+    </g>
+
+    <use href="#curve" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <use href="#curve" fill="none" stroke="#ffffff" stroke-opacity="1" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="16 280">
+      <animate attributeName="stroke-dashoffset" values="296;0" dur="2.8s" repeatCount="indefinite"/>
+    </use>
+
+    <circle cx="28" cy="102" r="11" fill="url(#nodeGlow)">
+      <animate attributeName="opacity" values="0.2;0.85;0.2" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="28" cy="102" r="3.2" fill="#ffffff">
+      <animate attributeName="r" values="2.6;4.2;2.6" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="62" cy="98" r="11" fill="url(#nodeGlow)">
+      <animate attributeName="opacity" values="0.15;0.8;0.15" dur="2.4s" begin="0.45s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="62" cy="98" r="3" fill="#ffffff">
+      <animate attributeName="r" values="2.4;3.9;2.4" dur="2.4s" begin="0.45s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="94" cy="64" r="11" fill="url(#nodeGlow)">
+      <animate attributeName="opacity" values="0.2;0.9;0.2" dur="2.4s" begin="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="94" cy="64" r="3.2" fill="#ffffff">
+      <animate attributeName="r" values="2.6;4.2;2.6" dur="2.4s" begin="0.9s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="132" cy="30" r="16" fill="url(#headGlow)">
+      <animate attributeName="r" values="11;19;11" dur="2s" repeatCount="indefinite" calcMode="spline" keyTimes="0;0.5;1" keySplines="0.4 0 0.2 1;0.4 0 0.2 1"/>
+      <animate attributeName="opacity" values="0.55;1;0.55" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="132" cy="30" r="5" fill="#ffffff">
+      <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="30" cy="30" r="1.6" fill="#ffffff">
+      <animate attributeName="opacity" values="0.15;0.8;0.15" dur="2.8s" begin="0.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="106" cy="118" r="1.3" fill="#ffffff">
+      <animate attributeName="opacity" values="0.1;0.7;0.1" dur="3.2s" begin="1.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <text x="200" y="128" font-family="Inter, DejaVu Sans, Helvetica, Arial, sans-serif" font-weight="700" font-size="76" letter-spacing="-3" fill="url(#wordmark)">Admaxxer</text>
+</svg>
