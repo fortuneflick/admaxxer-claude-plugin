@@ -22,56 +22,42 @@ push. Manifests, README and this file are hand-maintained.
 - [x] `claude plugin validate .` passes locally.
 - [x] `main` pushed. SHA at the xAI pin: `684cd2d59ab0f675959bce3379d7ee98717668ab`. Re-record after each push: `git ls-remote https://github.com/fortuneflick/admaxxer-claude-plugin.git HEAD`
 
-## Live check — MCP OAuth (2026-09-18)
+## Live check — MCP OAuth (2026-09-19)
 
-Both the claude.ai connectors directory and the ChatGPT review require working
-OAuth discovery. Verified against production on 2026-09-18:
+The authorization-code flow is live on production (platform commit
+`348c1e3d`, Coolify queue id 1332 `finished`, container image
+`348c1e3d779c2719b17b99c15b3fd7206bd0d12c`). Re-probed 2026-09-18 23:28 UTC.
 
 | Check | Result |
 |---|---|
-| `POST https://admaxxer.com/mcp` with no credentials | **401** |
-| `WWW-Authenticate` on that 401 | `Bearer realm="admaxxer-mcp", resource_metadata="https://admaxxer.com/.well-known/oauth-protected-resource"` |
-| `GET https://admaxxer.com/.well-known/oauth-protected-resource` | **200** — resource `https://admaxxer.com/mcp`, authorization server `https://admaxxer.com`, scopes `ads:read`, `analytics:read`, `ads:manage`, `bearer_methods_supported: ["header"]`, docs `https://admaxxer.com/documentation/developer` |
+| `POST https://admaxxer.com/oauth/register` minimal DCR (`{"redirect_uris":["https://claude.ai/api/mcp/auth_callback"]}`) | **201** `application/json` — `client_id` `admx_mcp_cl_cU4CglGep5D6UNCBmqyfeN_i7Qu-aiH_`, `token_endpoint_auth_method: none`, `grant_types: ["authorization_code","refresh_token"]`, `response_types: ["code"]`. Row written to `mcp_oauth_clients`. |
+| `GET /.well-known/oauth-authorization-server` | **200** — `registration_endpoint` `https://admaxxer.com/oauth/register`, `authorization_endpoint` `/oauth/authorize`, `token_endpoint` `/oauth/token`, `revocation_endpoint` `/oauth/revoke`, `grant_types_supported` `["authorization_code","refresh_token"]`, `code_challenge_methods_supported` `["S256"]`, `response_types_supported` `["code"]`, `token_endpoint_auth_methods_supported` `["none"]`, scopes `ads:read` `analytics:read` `ads:manage` |
+| `GET /.well-known/oauth-authorization-server/mcp` | **200** — same grants; `issuer` `https://admaxxer.com/mcp` (path-scoped alias) |
+| `GET /.well-known/oauth-protected-resource` | **200** — resource `https://admaxxer.com/mcp`, authorization server `https://admaxxer.com`, `bearer_methods_supported: ["header"]`, same scopes, docs `/documentation/developer` |
+| `GET /oauth/authorize` (no params) | **400** `{"error":"unsupported_response_type","error_description":"only response_type=code is supported"}` — no longer the SPA shell |
+| `POST https://admaxxer.com/mcp` with no credentials | **401** unchanged — `{"error":"unauthorized"}` |
+| `WWW-Authenticate` on that 401 | `Bearer realm="admaxxer-mcp", resource_metadata="https://admaxxer.com/.well-known/oauth-protected-resource"` (unchanged) |
+| `GET /api/version` after the deploy | **200** `{"buildId":"de7fe92ca54d"}` (was `e849496caf61` on the previous container) |
 
 Re-run before any submission:
 
 ```bash
+curl -sS -D - -o - -X POST https://admaxxer.com/oauth/register \
+  -H 'Content-Type: application/json' \
+  -d '{"redirect_uris":["https://claude.ai/api/mcp/auth_callback"]}'
+curl -s https://admaxxer.com/.well-known/oauth-authorization-server
+curl -sS -D - -o - https://admaxxer.com/oauth/authorize | head
 curl -si -X POST https://admaxxer.com/mcp \
   -H 'Content-Type: application/json' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -i www-authenticate
-curl -s https://admaxxer.com/.well-known/oauth-protected-resource
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | grep -iE 'HTTP/|www-authenticate'
 ```
 
-**There is no OAuth authorization-code flow.** Discovery *resolves*, which is
-not the same thing, and the difference is what a directory reviewer tests.
-Re-checked 2026-09-18:
-
-| What a reviewer does | What happens |
-|---|---|
-| `GET /.well-known/oauth-authorization-server` | 200, but `response_types_supported`, `grant_types_supported` and `code_challenge_methods_supported` are all `[]` |
-| Follows `authorization_endpoint` | lands on `/integrations/mcp`, the dashboard page, behind a session login — not an OAuth `/authorize` |
-| `POST` to a dynamic-registration endpoint | there is none; `/register` returns the SPA shell with a 200 |
-| `GET /authorize`, `/oauth/authorize`, `/.well-known/openid-configuration` | all 200 **with the SPA shell**, because unknown paths render the app (GL#606) — they look alive to a checker and are not endpoints |
-
-So an automated reviewer following RFC 9728 → RFC 8414 gets a metadata
-document that advertises an authorization server, then finds nothing behind
-it, and every wrong turn answers 200 instead of 404. **This is the most
-likely reason the claude.ai connectors directory turned the server down:**
-that directory's connect button drives DCR → `/authorize` → token exchange,
-and none of those three exist.
-
-Two honest ways forward, both owner decisions:
-
-1. **Build the flow** — dynamic client registration, `/authorize` with a
-   consent screen, PKCE, `/token`. This is what the claude.ai directory and
-   ChatGPT apps both want, and it is the only path to a one-click connector.
-2. **Stop advertising one** — drop `/.well-known/oauth-authorization-server`
-   and the `authorization_servers` pointer, and submit as a bearer-token
-   server where the catalog allows it (xAI, Anthropic plugins, Cursor all do).
-
-Until one of them is done, do not tell a reviewer OAuth sign-in is supported.
-The path that genuinely works today is the token minted at
-https://admaxxer.com/integrations/mcp.
+A directory reviewer following RFC 9728 → RFC 8414 → RFC 7591 now gets a
+real `registration_endpoint`, a 201 with a public `client_id`, and an
+`/oauth/authorize` that is an authorization server (400 without params;
+consent HTML when signed in). Paste-bearer tokens from
+https://admaxxer.com/integrations/mcp still work; OAuth access tokens
+resolve to the same workspace and scopes.
 
 ## 1. xAI plugin marketplace (Grok Build)
 
@@ -137,7 +123,7 @@ Packet to have ready:
 | Description | The README's opening two paragraphs |
 | Categories | Productivity, Analytics |
 | MCP server URL | `https://admaxxer.com/mcp` |
-| Auth | Bearer token minted in the dashboard; OAuth discovery metadata is served (verified above) |
+| Auth | OAuth 2.1 (DCR + authorization-code + PKCE S256) at `https://admaxxer.com/oauth/*`; paste bearer from `/integrations/mcp` still works. Live-checked 2026-09-19 (table above). |
 | Docs URL | `https://admaxxer.com/documentation/connect-any-ai` |
 | Privacy URL | `https://admaxxer.com/privacy` |
 | Support | `hello@admaxxer.com` |
