@@ -24,13 +24,11 @@
     "./skills/admaxxer"
   ],
   "mcpServers": {
-    "mcpServers": {
-      "admaxxer": {
-        "type": "http",
-        "url": "https://admaxxer.com/mcp",
-        "headers": {
-          "Authorization": "Bearer ${ADMAXXER_MCP_TOKEN}"
-        }
+    "admaxxer": {
+      "type": "http",
+      "url": "https://admaxxer.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${ADMAXXER_MCP_TOKEN}"
       }
     }
   }
