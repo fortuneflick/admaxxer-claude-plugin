@@ -119,9 +119,10 @@ Packet to have ready:
 |---|---|
 | Name | Admaxxer |
 | Slug | `admaxxer` |
-| Tagline (≤55 chars) | `Ad ops and attribution your agent can read` (42) |
-| Description | The README's opening two paragraphs |
-| Categories | Productivity, Analytics |
+| Tagline (≤55 chars) | `Ad account analytics and campaign control` (41) |
+| Description | The `pluginDescription()` in the platform `scripts/gen-agent-skill.ts` (README lede, every manifest, `server.json`) |
+| Categories (Claude directory) | Data Analytics, Sales And Marketing, Productivity |
+| Categories (Cursor marketplace) | Data & Analytics, Productivity, Agent Orchestration |
 | MCP server URL | `https://admaxxer.com/mcp` |
 | Auth | OAuth 2.1 (DCR + authorization-code + PKCE S256) at `https://admaxxer.com/oauth/*`; paste bearer from `/integrations/mcp` still works. Live-checked 2026-09-19 (table above). |
 | Docs URL | `https://admaxxer.com/documentation/connect-any-ai` |

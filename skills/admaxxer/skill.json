@@ -1,6 +1,20 @@
 {
   "name": "admaxxer",
-  "description": "Read a marketing workspace's ad accounts, revenue attribution and web analytics, and run campaign-level ad ops the person approves in the conversation.",
+  "description": "Admaxxer is ad account analytics and campaign control for AI agents. Read spend, ROAS, MER, attribution and traffic, then pause a campaign or change a daily budget with a preview the person approves. Use when asked about ad spend, ROAS, MER, attribution or traffic, when a campaign needs pausing or a budget change, or when building a new campaign from an agent.",
+  "tagline": "Ad account analytics and campaign control",
+  "catalog_description": "Admaxxer is ad account analytics and campaign control for AI agents: one workspace's Meta, Google, TikTok, Shopify and Klaviyo accounts, plus the attribution and web analytics the dashboard reads. The hosted MCP server at https://admaxxer.com/mcp exposes 28 tools (24 read, 4 write). A token is read-only unless minted with the Read + manage scope. Every write is two steps: a preview and confirmToken, then a second call after the person agrees. Anything created lands paused; there is no activate option. No tool deletes anything or changes account-level settings. Auth is a paste bearer from https://admaxxer.com/integrations/mcp or OAuth 2.1 with dynamic client registration. Starter prompts: \"What did I spend on Meta last week and what was the ROAS?\" \"Which channel actually drove last week's revenue?\" \"Pause the Summer Sale campaign (I'll confirm).\"",
+  "keywords": [
+    "MCP server",
+    "MCP connector",
+    "ad account analytics",
+    "campaign control",
+    "Meta Ads",
+    "Google Ads",
+    "ROAS",
+    "attribution",
+    "Claude",
+    "Cursor"
+  ],
   "endpoint": "https://admaxxer.com/mcp",
   "sse_endpoint": "https://admaxxer.com/mcp/sse",
   "token_page": "https://admaxxer.com/integrations/mcp",
@@ -11,6 +25,15 @@
     "ads:manage"
   ],
   "tools": [
+    {
+      "name": "admaxxer_whoami",
+      "summary": "Returns who this token is — workspace, scopes, whether writes are allowed, plan, and connected platforms. The first call on a new conversation.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [],
+      "required": [],
+      "example_prompt": "Who am I authenticated as, and can I change campaigns?"
+    },
     {
       "name": "admaxxer_list_connections",
       "summary": "Lists every Meta + Google ad-platform connection in the workspace, with status (healthy / token expired / disabled), platform, and account label. Used by the AI to discover which connections to query for insights.",
@@ -28,7 +51,9 @@
       "inputs": [
         "connection_id",
         "date_from",
-        "date_to"
+        "date_to",
+        "limit",
+        "cursor"
       ],
       "required": [
         "connection_id"
@@ -43,7 +68,9 @@
       "inputs": [
         "connection_id",
         "date_from",
-        "date_to"
+        "date_to",
+        "limit",
+        "cursor"
       ],
       "required": [
         "connection_id"
@@ -58,7 +85,9 @@
       "inputs": [
         "connection_id",
         "date_from",
-        "date_to"
+        "date_to",
+        "limit",
+        "cursor"
       ],
       "required": [
         "connection_id"
@@ -148,6 +177,42 @@
         "campaign_id"
       ],
       "example_prompt": "Pause the 'Summer Sale — Prospecting' campaign on Meta (I'll confirm)."
+    },
+    {
+      "name": "admaxxer_update_adset",
+      "summary": "Pauses/resumes an ad set (Meta) or ad group (Google), or changes its daily budget when the platform keeps the budget on the ad set. Two-step preview + confirmToken. Requires the 'Read + manage' scope.",
+      "kind": "write",
+      "scope": "ads:manage",
+      "inputs": [
+        "connection_id",
+        "adset_id",
+        "status",
+        "dailyBudget",
+        "confirmToken"
+      ],
+      "required": [
+        "connection_id",
+        "adset_id"
+      ],
+      "example_prompt": "Pause the retargeting ad set under Summer Sale (I'll confirm)."
+    },
+    {
+      "name": "admaxxer_update_ad",
+      "summary": "Pauses or resumes one ad. Status only — ads do not carry a daily budget. Two-step preview + confirmToken. Requires the 'Read + manage' scope.",
+      "kind": "write",
+      "scope": "ads:manage",
+      "inputs": [
+        "connection_id",
+        "ad_id",
+        "status",
+        "confirmToken"
+      ],
+      "required": [
+        "connection_id",
+        "ad_id",
+        "status"
+      ],
+      "example_prompt": "Pause the worst-ROAS ad in that ad set (I'll confirm)."
     },
     {
       "name": "admaxxer_get_creation_options",
@@ -240,6 +305,121 @@
       "inputs": [],
       "required": [],
       "example_prompt": "Which pages do AI assistants cite when they answer about us?"
+    },
+    {
+      "name": "admaxxer_list_shopify_orders",
+      "summary": "Lists recent Shopify orders for a connected store (id, total, currency, status, line items). Customer email is omitted. One cached page; pass next_cursor for more.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "connection_id",
+        "created_at_min",
+        "limit",
+        "cursor"
+      ],
+      "required": [
+        "connection_id"
+      ],
+      "example_prompt": "What did we sell on Shopify yesterday?"
+    },
+    {
+      "name": "admaxxer_list_shopify_products",
+      "summary": "Lists products in a connected Shopify store (title, status, type, vendor, variant prices). One cached page.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "connection_id",
+        "limit",
+        "cursor"
+      ],
+      "required": [
+        "connection_id"
+      ],
+      "example_prompt": "What's in the Shopify catalog right now?"
+    },
+    {
+      "name": "admaxxer_list_klaviyo_flows",
+      "summary": "Lists Klaviyo flows on a connected account (name, status, archived). One cached page. Does not start or stop a flow.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "connection_id",
+        "limit",
+        "cursor"
+      ],
+      "required": [
+        "connection_id"
+      ],
+      "example_prompt": "Which Klaviyo flows are live?"
+    },
+    {
+      "name": "admaxxer_list_klaviyo_lists",
+      "summary": "Lists Klaviyo lists and segments on a connected account. One cached page. Does not subscribe anyone.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "connection_id",
+        "limit",
+        "cursor"
+      ],
+      "required": [
+        "connection_id"
+      ],
+      "example_prompt": "What Klaviyo lists do we have?"
+    },
+    {
+      "name": "admaxxer_list_alerts",
+      "summary": "Lists alert rules (goal hit, threshold, anomaly, trend) and the last firings. Does not create or send an alert.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "website_id"
+      ],
+      "required": [],
+      "example_prompt": "Which alerts fired this week?"
+    },
+    {
+      "name": "admaxxer_get_audience_demographics",
+      "summary": "Platform-reported age and gender of people the ads reached — the same Audience demographics card, not site-visitor demographics.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "date_from",
+        "date_to",
+        "platform"
+      ],
+      "required": [],
+      "example_prompt": "Who are the ads actually reaching by age and gender?"
+    },
+    {
+      "name": "admaxxer_get_source_audience",
+      "summary": "Countries, devices, and browsers of sessions behind one (source, medium) row from the attribution table.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "source",
+        "medium",
+        "row_id",
+        "date_from",
+        "date_to",
+        "website_id"
+      ],
+      "required": [
+        "source",
+        "medium"
+      ],
+      "example_prompt": "Who sat behind facebook/paid this week — country and device?"
+    },
+    {
+      "name": "admaxxer_export_report",
+      "summary": "Returns the dashboard's daily, weekly, or monthly report as JSON. Does not send email.",
+      "kind": "read",
+      "scope": "read",
+      "inputs": [
+        "frequency"
+      ],
+      "required": [],
+      "example_prompt": "Export this week's report as JSON so I can paste it."
     }
   ]
 }

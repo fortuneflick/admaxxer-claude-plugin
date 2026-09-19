@@ -2,11 +2,7 @@
 
 # Admaxxer for AI agents
 
-**Your ad accounts, your attribution and your web analytics, readable by an
-agent, with every change gated on your approval.** Connect Claude, Cursor,
-Codex, Gemini CLI, Windsurf, VS Code, OpenCode or anything else that speaks
-MCP to an Admaxxer workspace with a token you mint yourself. The agent gets 17
-tools: 15 read the workspace, 2 change a campaign.
+Admaxxer is ad account analytics and campaign control for AI agents: one workspace's Meta, Google, TikTok, Shopify and Klaviyo accounts, plus the attribution and web analytics the dashboard reads. The hosted MCP server at https://admaxxer.com/mcp exposes 28 tools (24 read, 4 write). A token is read-only unless minted with the Read + manage scope. Every write is two steps: a preview and confirmToken, then a second call after the person agrees. Anything created lands paused; there is no activate option. No tool deletes anything or changes account-level settings. Auth is a paste bearer from https://admaxxer.com/integrations/mcp or OAuth 2.1 with dynamic client registration. Starter prompts: "What did I spend on Meta last week and what was the ROAS?" "Which channel actually drove last week's revenue?" "Pause the Summer Sale campaign (I'll confirm)."
 
 Three rules the server enforces, so no amount of prompting moves them:
 
@@ -20,8 +16,8 @@ Three rules the server enforces, so no amount of prompting moves them:
   option over MCP, so nothing an agent builds can spend until you set it live
   in the dashboard.
 
-Campaign-level only: pause, resume, daily budget, and building new campaigns,
-ad sets and ads. No deletion. No account-level actions.
+Pause, resume, and daily budget at campaign, ad-set and ad level, plus
+building new campaigns that land paused. No deletion. No account-level actions.
 
 This repository ships the skill (`SKILL.md`, `skills/admaxxer/`) and the plugin
 manifests for Claude Code, Cursor and Grok Build. The MCP server itself is
