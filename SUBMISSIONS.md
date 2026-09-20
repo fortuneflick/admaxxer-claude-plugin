@@ -133,7 +133,7 @@ Packet to have ready:
 | Support | `hello@admaxxer.com` |
 | Icon | `assets/icon-192.png` |
 | Example prompts | "What did I spend on Meta last week and what was the ROAS?" · "Which channel actually drove last week's revenue?" · "Show me the worst ad sets by ROAS in my prospecting campaign" · "Pause the Summer Sale campaign (I'll confirm)" · "How many sessions did the site get this week?" |
-| Test account | PLACEHOLDER — a demo workspace with a connected ad account, 30 days of data, a read-only token and a manage token, signed in without MFA |
+| Test account | `https://admaxxer.com/review-login?token=` + the value in `/root/admaxxer-review-login.token` on the Coolify host (chmod 600). Lands on **Admaxxer Review Sandbox** as `reviewer@admaxxer.com`. No Google, no MFA. Token is not in this repository. |
 
 ## 5. ChatGPT plugins (last)
 
@@ -142,9 +142,9 @@ Packet to have ready:
   status check).
 - Requirements: `/.well-known/openai-apps-challenge` served from admaxxer.com
   with the token the portal issues; honest tool annotations; a fully featured
-  demo account **without MFA**; exactly 5 positive and 3 negative test cases;
-  privacy, terms and support URLs; tested in Developer Mode on desktop and
-  mobile.
+  demo account **without MFA** (the review-login URL above); exactly 5 positive
+  and 3 negative test cases; privacy, terms and support URLs; tested in
+  Developer Mode on desktop and mobile.
 - **Owner step before submitting:** the challenge route does not exist yet. Ask
   for the token in the portal, then serve it next to the other `/.well-known`
   documents — a code change in the platform repository, not a DNS record.
