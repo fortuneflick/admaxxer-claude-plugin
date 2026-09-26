@@ -12,6 +12,9 @@
   "repository": "https://github.com/fortuneflick/admaxxer-claude-plugin",
   "license": "MIT",
   "privacyPolicyUrl": "https://admaxxer.com/privacy",
+  "termsOfServiceUrl": "https://admaxxer.com/terms",
+  "supportUrl": "https://admaxxer.com/support",
+  "documentationUrl": "https://admaxxer.com/documentation/connect-any-ai",
   "keywords": [
     "MCP server",
     "MCP connector",
