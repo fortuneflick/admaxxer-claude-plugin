@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "admaxxer": {
+      "type": "http",
+      "url": "https://admaxxer.com/mcp"
+    }
+  }
+}

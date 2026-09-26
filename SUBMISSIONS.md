@@ -93,11 +93,10 @@ vs personal account" question; the answer is to move this repository to an
   `.claude-plugin/plugin.json` · category `productivity` · license MIT
 - Homepage: `https://admaxxer.com/documentation/connect-any-ai`
 - Description: use the `description` in `.claude-plugin/plugin.json` verbatim.
-- Note for the reviewer: the plugin is skill-only by design; the server is
-  added separately with `claude mcp add --transport http admaxxer
-  https://admaxxer.com/mcp`, so installing it never registers a second server
-  next to an existing connector. No credential is written to a config file and
-  none is in this repository.
+- Note for the reviewer: the plugin ships the skill and a `.mcp.json` that
+  names https://admaxxer.com/mcp, the same URL as the Admaxxer connector, with
+  no token; the person signs in through OAuth. No credential is written to a
+  config file and none is in this repository.
 - Pushes to this repository are picked up automatically. **Never open a second
   submission.**
 
@@ -108,7 +107,7 @@ vs personal account" question; the answer is to move this repository to an
 - Repository URL `https://github.com/fortuneflick/admaxxer-claude-plugin`,
   manifest `.cursor-plugin/plugin.json`, marketplace file
   `.cursor-plugin/marketplace.json`, logo
-  `https://raw.githubusercontent.com/fortuneflick/admaxxer-claude-plugin/main/assets/logo.svg`,
+  https://raw.githubusercontent.com/fortuneflick/admaxxer-claude-plugin/main/assets/logo.svg,
   org name `Admaxxer`, handle `admaxxer`, contact `hello@admaxxer.com`,
   website `https://admaxxer.com`.
 - The Cursor plugin is skill-only; the one-click server install is the deeplink
@@ -131,7 +130,7 @@ Packet to have ready:
 | Docs URL | `https://admaxxer.com/documentation/connect-any-ai` |
 | Privacy URL | `https://admaxxer.com/privacy` |
 | Support | `hello@admaxxer.com` |
-| Icon | `assets/icon-192.png` |
+| Icon | assets/icon-192.png (192 px PNG) |
 | Example prompts | "What did I spend on Meta last week and what was the ROAS?" · "Which channel actually drove last week's revenue?" · "Show me the worst ad sets by ROAS in my prospecting campaign" · "Pause the Summer Sale campaign (I'll confirm)" · "How many sessions did the site get this week?" |
 | Test account | `https://admaxxer.com/review-login?token=` + the value in `/root/admaxxer-review-login.token` on the Coolify host (chmod 600). Lands on **Admaxxer Review Sandbox** as `reviewer@admaxxer.com`. No Google, no MFA. Token is not in this repository. |
 

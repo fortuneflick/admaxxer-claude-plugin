@@ -33,7 +33,7 @@ carries the same endpoint and a placeholder: replace
 
 ## Install
 
-**Claude Code — the plugin brings the skill:**
+**Claude Code — the plugin brings the server and the skill together:**
 
 ```
 /plugin marketplace add fortuneflick/admaxxer-claude-plugin
@@ -137,11 +137,12 @@ npx skills add fortuneflick/admaxxer-claude-plugin
 ```
 
 **Grok Build:** run `/marketplace` and pick Admaxxer, or add this repository as
-a marketplace source. The Grok manifest (`.grok-plugin/plugin.json`) is the
-only one that bundles the hosted server through its `mcpServers` field, so Grok
-gets the tools and the skill in one install. The Claude Code and Cursor plugins
-are skill-only on purpose: installing one never registers a second Admaxxer
-server beside a connector you already have.
+a marketplace source. The Grok manifest (`.grok-plugin/plugin.json`) bundles
+the hosted server through its `mcpServers` field, so Grok gets the tools and the
+skill in one install. The Claude plugin's `.mcp.json` names the same URL as the
+Admaxxer connector in the Claude directory with no token: you sign in through
+OAuth the first time a tool runs, and someone who has both sees one set of
+tools. The Cursor plugin is skill-only.
 
 ## What the agent can do
 
@@ -184,8 +185,9 @@ https://admaxxer.com/documentation/connect-any-ai.
   tools run there.
 - **Credentials:** a bearer token you mint and revoke at
   https://admaxxer.com/integrations/mcp. This repository contains no tokens and
-  never asks for one in chat. The manifests read `ADMAXXER_MCP_TOKEN` from your
-  environment rather than writing it to a config file.
+  never asks for one in chat. The Grok manifest reads `ADMAXXER_MCP_TOKEN` from
+  your environment rather than writing it to a config file; the Claude plugin
+  carries no token and signs you in through OAuth.
 - **Audit trail.** Every tool call that touches a connected ad account leaves a
   row you can read back in the dashboard.
 - **No telemetry.** Nothing here phones home.
